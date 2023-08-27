@@ -1,0 +1,23 @@
+version: "3.8"
+services:
+  broker:
+    image: eclipse-mosquitto
+    ports:
+      - 1883:1883
+      - 9001:9001
+    volumes:
+      - "~/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro"
+      - "~/mosquitto/data:/mosquitto/data"
+      - "~/mosquitto/log:/mosquitto/log"
+  server:
+    build: ./server
+    ports:
+      - 8001:8001
+    depends_on:
+      - broker
+  sub:
+    build: ./traffic-light
+    ports:
+      - 8002:8002
+    depends_on:
+      - broker
